@@ -27,7 +27,7 @@ function createPlots () {
 
         //create layout
         var layout = {
-            title: "Top 10 OTU",
+            title: "Top 10 operational taxonomic units",
             yaxis:{
                 tickmode:"linear",
             },
@@ -38,7 +38,30 @@ function createPlots () {
                 b:30
             }
         };
+//create the bar plot
+Plotly.newPlot("bar", data, layout);
 
+//Now the bubble chart
+    var trace1 = {
+        x: sampledata.samples[0].otu_ids,
+        y: sampledata.samples[0].sample_values,
+        mode: "markers",
+        marker: {
+            size: sampledata.samples[0].sample_values,
+            color: sampledata.samples[0].otu_ids
+        },
+        text: sampledata.samples[0].otu_labels
+    };
+    //set layout for bubble plot
+    var layout_2 = {
+        xaxis: {title:"OTU ID"},
+        height: 600,
+        width: 1000
+    };
+    //create data variable
+    var data1 = [trace1];
+    //create bubbles
+    Plotly.newPlot("bubble", data1, layout_2);
 
-    })
+    });
 }
