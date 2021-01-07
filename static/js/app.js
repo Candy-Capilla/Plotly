@@ -1,6 +1,6 @@
 function createPlots() {
     //read samples.json
-    d3.json("samples.json").then (sampledata => {
+    d3.json("samples.json").then(sampledata => {
         //console.log(sampledata)
         //top 10 samples and values
         var otuTop10 = sampledata.samples[0].otu_ids.slice(0,10).reverse();
@@ -37,37 +37,44 @@ function createPlots() {
                 t:100,
                 b:30
             }
+    
         };
-//create the bar plot
-Plotly.newPlot("bar", data, layout);
+        //create the bar plot
+        Plotly.newPlot("bar", data, layout);
 
-// create variables for all 
-var otuAll = sampledata.samples[0].otu_ids;
-var sampleValuesAll = sampledata.samples[0].sample_values;
-var labelsAll = sampledata.samples[0].otu_labels;
+        // create variables for all 
+        var otuAll = sampledata.samples[0].otu_ids;
+        var sampleValuesAll = sampledata.samples[0].sample_values;
+        var labelsAll = sampledata.samples[0].otu_labels;
 
-//Now the bubble chart
-    var trace1 = {
-        x: otuAll,
-        y: sampleValuesAll,
-        mode: "markers",
-        marker: {
-            size: sampleValuesAll,
-            color: otuAll
-        },
-        text: labelsAll
-    };
-    //create data variable
-    var data1 = [trace1];
-    //set layout for bubble plot
-    var layout1 = {
-        xaxis: {title:"OTU ID"},
-        height: 600,
-        width: 1000
-    };
-    //create bubbles
-    Plotly.newPlot("bubble", data1, layout1);
+        //Now the bubble chart
+        var trace1 = {
+            x: otuAll,
+            y: sampleValuesAll,
+            mode: "markers",
+            marker: {
+                size: sampleValuesAll,
+                color: otuAll
+            },
+            text: labelsAll
+        };
+        //create data variable
+        var data1 = [trace1];
+        //set layout for bubble plot
+        var layout1 = {
+            xaxis: {title:"OTU ID"},
+            height: 600,
+            width: 1000
+        };
+        //create bubbles
+        Plotly.newPlot("bubble", data1, layout1);
 
+        // create variable for metadata
+        var metadata = data.metadata;
+        // create variable for filtered metadata by id
+        var filtermeta = metadata.filter(meta => meta.id.toString() === id)[0];
+        console.log(MetaData)
+        plotGaugeChart();
     });
 }
 
@@ -75,15 +82,15 @@ var labelsAll = sampledata.samples[0].otu_labels;
     function MetaData(id) {
         //read samples.json
         d3.json("samples.json").then((data) =>{
-        // create variable for metadata
+            // create variable for metadata
             var metadata = data.metadata;
-        // create variable for filtered metadata by id
+            // create variable for filtered metadata by id
             var filtermeta = metadata.filter(meta => meta.id.toString() === id)[0];
-        // create variable to select demographics panel using d3
+            // create variable to select demographics panel using d3
             var demoPanel = d3.select("#sample-metadata");
-        // empty panel before getting new info
+            // empty panel before getting new info
             demoPanel.html("");
-        // grab the necessary metadata for the id and append to the demographics panel
+            // grab the necessary metadata for the id and append to the demographics panel
             Object.entries(filtermeta).forEach((key) => {
                 demoPanel.append("h5").text(key[0].toUpperCase() + ": " + key[1] + "\n");
             });
